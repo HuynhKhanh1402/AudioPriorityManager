@@ -22,8 +22,18 @@ def clean_build():
         spec_file.unlink()
         print(f"Removed {spec_file}")
 
+def get_icon_path():
+    """Get the path to the existing logo icon"""
+    icon_path = 'assets/logo.ico'
+    if os.path.exists(icon_path):
+        print(f"Using existing icon: {icon_path}")
+        return icon_path
+    else:
+        print(f"Icon not found at {icon_path}, will proceed without icon")
+        return None
+
 def create_icon():
-    """Create a simple icon for the application"""
+    """Create a simple icon for the application (fallback if logo.ico doesn't exist)"""
     try:
         from PIL import Image, ImageDraw
         
@@ -42,7 +52,7 @@ def create_icon():
             draw.rectangle([50, y, 78, y+3], fill=(255, 255, 255, 255))
         
         # Save as ICO file
-        icon_path = 'assets/icon.ico'
+        icon_path = 'assets/logo.ico'
         os.makedirs('assets', exist_ok=True)
         img.save(icon_path, 'ICO', sizes=[(16,16), (32,32), (48,48), (64,64), (128,128)])
         print(f"Created icon: {icon_path}")
@@ -55,7 +65,10 @@ def build_gui_version():
     """Build GUI version"""
     print("Building GUI version...")
     
-    icon_path = create_icon()
+    # Try to use existing logo first, fallback to creating one
+    icon_path = get_icon_path()
+    if not icon_path:
+        icon_path = create_icon()
     
     cmd = [
         'pyinstaller',
@@ -66,6 +79,7 @@ def build_gui_version():
         '--workpath', 'build',          # Build directory
         '--clean',                      # Clean cache
         '--add-data', 'src;src',        # Include src directory
+        '--add-data', 'assets;assets',  # Include assets directory for runtime logo access
     ]
     
     if icon_path:

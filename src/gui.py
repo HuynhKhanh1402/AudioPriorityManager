@@ -196,10 +196,17 @@ class AudioPriorityGUI(QMainWindow):
 
     def get_logo_path(self, filename):
         """Get the path to a logo file in the assets folder"""
-        # Get the directory where this script is located
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        # Go up one level to the project root, then into assets
-        assets_dir = os.path.join(os.path.dirname(current_dir), "assets")
+        # Check if we're running from a PyInstaller bundle
+        if getattr(sys, 'frozen', False):
+            # Running from PyInstaller bundle
+            base_path = sys._MEIPASS
+            assets_dir = os.path.join(base_path, "assets")
+        else:
+            # Running from source code
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            # Go up one level to the project root, then into assets
+            assets_dir = os.path.join(os.path.dirname(current_dir), "assets")
+        
         return os.path.join(assets_dir, filename)
 
     def set_window_icon(self):
