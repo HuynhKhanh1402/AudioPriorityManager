@@ -1,0 +1,7 @@
+pycaw>=20230407
+comtypes>=1.2.0
+PyQt6>=6.6.0
+PyQt6-tools>=6.6.0
+pystray>=0.19.4
+Pillow>=10.0.0
+pyinstaller>=6.0.0

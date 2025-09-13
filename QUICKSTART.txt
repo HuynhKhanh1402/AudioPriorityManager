@@ -1,0 +1,68 @@
+AUDIO PRIORITY MANAGER - QUICK START GUIDE
+==========================================
+
+🎯 MỤC ĐÍCH:
+Tự động giảm âm lượng các ứng dụng khác khi ứng dụng ưu tiên đang phát âm thanh.
+
+📦 CÀI ĐẶT:
+1. Đảm bảo có Python 3.8+ được cài đặt
+2. Chạy: quick_setup.bat (hoặc pip install -r requirements.txt)
+3. Chạy ứng dụng
+
+🚀 CÁCH DÙNG:
+
+=== GUI MODE (Khuyên dùng) ===
+Chạy: python app.py
+
+1. Nhập tên process ưu tiên (VD: vlc.exe, spotify.exe)
+2. Cấu hình mức âm lượng duck (0.0-1.0)
+3. Bấm "Start Ducking"
+4. Minimize to tray để chạy nền
+
+=== CLI MODE ===
+Chạy: python app.py --priority "vlc.exe"
+
+Ví dụ chi tiết:
+- python app.py --priority "vlc.exe" --duck-to 0.2
+- python app.py --priority "spotify.exe" --other "chrome.exe" "discord.exe"
+
+🔧 BUILD EXE:
+Chạy: python build_exe.py
+Tạo ra file EXE độc lập trong thư mục dist/
+
+📁 CẤU TRÚC FILES:
+
+main.py           - File gốc (legacy CLI)
+app.py            - Launcher chính (GUI + CLI)
+src/
+  ├─ audio_engine.py - Logic xử lý audio ducking  
+  └─ gui.py         - Giao diện PyQt6
+build_exe.py      - Script build EXE
+demo.py           - Test và demo
+quick_setup.bat   - Cài đặt nhanh
+
+🎮 USE CASES:
+
+Gaming:   Giảm nhạc khi game có âm thanh
+Call:     Tắt nhạc nền khi đang họp
+Media:    Giảm notification khi xem phim
+
+💡 TIPS:
+
+- Chạy as Administrator để có quyền truy cập đầy đủ
+- Tên process phải có đuôi .exe
+- Có thể target nhiều process cụ thể
+- Sử dụng system tray để chạy nền
+- Cấu hình được lưu tự động
+
+🐛 TROUBLESHOOTING:
+
+Lỗi import pycaw:     pip install pycaw comtypes
+Lỗi import PyQt6:     pip install PyQt6  
+Không detect audio:   Chạy as Administrator
+Build EXE lỗi:        pip install pyinstaller
+
+📞 SUPPORT:
+
+Check README.md để biết thêm chi tiết
+Hoặc chạy demo.py để test hệ thống
