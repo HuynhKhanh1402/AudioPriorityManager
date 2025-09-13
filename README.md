@@ -108,40 +108,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - `Pillow` - Image processing
 - `pyinstaller` - EXE building
 
-## 🐛 Troubleshooting
-
-### Vấn đề thường gặp
-
-1. **"No module named 'pycaw'"**
-   ```bash
-   pip install pycaw comtypes
-   ```
-
-2. **"Could not import PyQt6"**
-   ```bash
-   pip install PyQt6
-   ```
-
-3. **Không detect được audio sessions**
-   - Chạy as Administrator
-   - Kiểm tra tên process có đúng không (phải có .exe)
-   - Đảm bảo app đang thực sự phát âm thanh
-
-4. **Ducking không smooth**
-   - Giảm `interval` (VD: 0.03)
-   - Tăng `step` (VD: 0.12)
-   - Điều chỉnh `attack-frames` và `release-frames`
-
-### Debug
-
-```bash
-# Chạy với verbose output
-python app.py --priority "vlc.exe" --interval 0.1
-
-# Kiểm tra audio sessions
-# (sẽ có tool riêng trong tương lai)
-```
-
 ## 🤝 Contributing
 
 1. Fork the repository
