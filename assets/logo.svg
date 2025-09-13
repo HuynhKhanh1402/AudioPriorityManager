@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <!-- Solo Bar (EQ) - 256x256
+       Safe margin: 24px; Bars: width 24px, gap 16px; Corner radius: 12px.
+       Coordinates (x,y,width,height):
+         Bar1: x=36,  y=136, w=24, h=96   (gray)
+         Bar2: x=76,  y=104, w=24, h=128  (gray)
+         Bar3: x=116, y=56,  w=24, h=176  (priority blue)
+         Bar4: x=156, y=120, w=24, h=112  (gray)
+         Bar5: x=196, y=144, w=24, h=88   (gray)
+  -->
+  <!-- Optional guide (safe area) -->
+  <!-- <rect x="24" y="24" width="208" height="208" fill="none" stroke="#E5E7EB" stroke-width="1"/> -->
+
+  <!-- Bars -->
+  <rect x="36"  y="136" width="24" height="96"  rx="12" fill="#9CA3AF"/>
+  <rect x="76"  y="104" width="24" height="128" rx="12" fill="#9CA3AF"/>
+  <rect x="116" y="56"  width="24" height="176" rx="12" fill="#2563EB"/>
+  <rect x="156" y="120" width="24" height="112" rx="12" fill="#9CA3AF"/>
+  <rect x="196" y="144" width="24" height="88"  rx="12" fill="#9CA3AF"/>
+</svg>

@@ -8,7 +8,7 @@ from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
                             QSpinBox, QDoubleSpinBox, QTextEdit, QGroupBox,
                             QListWidget, QTabWidget, QCheckBox, QMessageBox,
                             QSystemTrayIcon, QMenu, QFrame, QGridLayout,
-                            QSplitter, QProgressBar, QFileDialog)
+                            QSplitter, QProgressBar, QFileDialog, QDialog)
 from PyQt6.QtCore import QTimer, pyqtSignal, QThread, Qt, QSize
 from PyQt6.QtGui import QIcon, QPixmap, QFont, QAction, QPainter, QColor, QBrush
 
@@ -61,6 +61,9 @@ class AudioPriorityGUI(QMainWindow):
         self.setWindowTitle("Audio Priority Manager")
         self.setMinimumSize(800, 600)
         self.setStyleSheet(self._get_dark_theme())
+        
+        # Set window icon
+        self.set_window_icon()
         
         # Setup UI
         self.setup_ui()
@@ -191,6 +194,23 @@ class AudioPriorityGUI(QMainWindow):
         }
         """
 
+    def get_logo_path(self, filename):
+        """Get the path to a logo file in the assets folder"""
+        # Get the directory where this script is located
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        # Go up one level to the project root, then into assets
+        assets_dir = os.path.join(os.path.dirname(current_dir), "assets")
+        return os.path.join(assets_dir, filename)
+
+    def set_window_icon(self):
+        """Set the window icon using the logo.ico file"""
+        try:
+            icon_path = self.get_logo_path("logo.ico")
+            if os.path.exists(icon_path):
+                self.setWindowIcon(QIcon(icon_path))
+        except Exception as e:
+            print(f"Could not load window icon: {e}")
+
     def setup_ui(self):
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
@@ -265,10 +285,22 @@ class AudioPriorityGUI(QMainWindow):
         
         # Priority process
         basic_layout.addWidget(QLabel("Priority Process:"), 0, 0)
+        
+        # Process selection layout
+        process_layout = QHBoxLayout()
         self.priority_edit = QLineEdit()
         self.priority_edit.setPlaceholderText("e.g., vlc.exe, spotify.exe, chrome.exe")
         self.priority_edit.setToolTip("Process name that will have audio priority (case insensitive)")
-        basic_layout.addWidget(self.priority_edit, 0, 1)
+        
+        self.browse_process_button = QPushButton("📋 Browse...")
+        self.browse_process_button.clicked.connect(self.browse_processes)
+        self.browse_process_button.setToolTip("Browse running processes and select one")
+        self.browse_process_button.setMaximumWidth(100)
+        
+        process_layout.addWidget(self.priority_edit)
+        process_layout.addWidget(self.browse_process_button)
+        
+        basic_layout.addLayout(process_layout, 0, 1)
         
         # Duck to volume
         basic_layout.addWidget(QLabel("Duck to Volume:"), 1, 0)
@@ -489,11 +521,24 @@ class AudioPriorityGUI(QMainWindow):
                                "System tray is not available on this system.")
             return
         
-        # Create tray icon (simple colored circle for now)
-        icon_pixmap = QPixmap(32, 32)
-        icon_pixmap.fill(QColor(61, 174, 233))  # Blue color
+        # Create tray icon using logo.ico
+        try:
+            icon_path = self.get_logo_path("logo.ico")
+            if os.path.exists(icon_path):
+                tray_icon = QIcon(icon_path)
+            else:
+                # Fallback to colored circle if logo not found
+                icon_pixmap = QPixmap(32, 32)
+                icon_pixmap.fill(QColor(61, 174, 233))  # Blue color
+                tray_icon = QIcon(icon_pixmap)
+        except Exception as e:
+            print(f"Could not load tray icon: {e}")
+            # Fallback to colored circle
+            icon_pixmap = QPixmap(32, 32)
+            icon_pixmap.fill(QColor(61, 174, 233))  # Blue color
+            tray_icon = QIcon(icon_pixmap)
         
-        self.tray_icon = QSystemTrayIcon(QIcon(icon_pixmap), self)
+        self.tray_icon = QSystemTrayIcon(tray_icon, self)
         
         # Create tray menu
         tray_menu = QMenu()
@@ -560,6 +605,21 @@ class AudioPriorityGUI(QMainWindow):
             return max_level
         except Exception:
             return 0.0
+
+    def browse_processes(self):
+        """Open process selection dialog"""
+        try:
+            from .process_dialog import ProcessSelectionDialog
+            
+            dialog = ProcessSelectionDialog(self, self.priority_edit.text())
+            if dialog.exec() == QDialog.DialogCode.Accepted:
+                selected_process = dialog.get_selected_process()
+                if selected_process:
+                    self.priority_edit.setText(selected_process)
+                    self.log_message(f"Selected priority process: {selected_process}")
+                    
+        except Exception as e:
+            QMessageBox.warning(self, "Error", f"Failed to open process browser: {e}")
 
     def update_duck_percentage(self):
         """Update duck to volume percentage display"""
