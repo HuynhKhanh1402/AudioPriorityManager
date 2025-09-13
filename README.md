@@ -93,23 +93,6 @@ AudioPriority/
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-# Chạy development launcher
-dev_launcher.bat
-
-# Hoặc chạy trực tiếp
-python app.py --gui
-```
-
-### Build EXE
-
-```bash
-# Build cả GUI và CLI version
-python build_exe.py
-
-# Hoặc build riêng lẻ
-pyinstaller AudioPriorityGUI.spec
-```
-
 ## 📋 Requirements
 
 - **OS**: Windows 10/11
