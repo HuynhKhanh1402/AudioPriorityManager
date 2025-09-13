@@ -56,7 +56,7 @@ A Windows application that automatically manages audio volume levels by "ducking
 - **Timing Controls**: Adjust responsiveness and smoothness
 - **Target Processes**: Optionally limit ducking to specific applications
 
-## �️ Technical Details
+## ⚙️ Technical Details
 
 ### Dependencies
 - `PyQt6`: Modern GUI framework
