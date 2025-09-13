@@ -1,68 +1,76 @@
 AUDIO PRIORITY MANAGER - QUICK START GUIDE
 ==========================================
 
-🎯 MỤC ĐÍCH:
-Tự động giảm âm lượng các ứng dụng khác khi ứng dụng ưu tiên đang phát âm thanh.
+🎯 PURPOSE:
+Automatically lower the volume of other applications when your priority application is playing audio.
 
-📦 CÀI ĐẶT:
-1. Đảm bảo có Python 3.8+ được cài đặt
-2. Chạy: quick_setup.bat (hoặc pip install -r requirements.txt)
-3. Chạy ứng dụng
+📦 INSTALLATION:
+1. Ensure Python 3.8+ is installed
+2. Run: quick_setup.bat (or pip install -r requirements.txt)
+3. Launch the application
 
-🚀 CÁCH DÙNG:
+🚀 USAGE:
 
-=== GUI MODE (Khuyên dùng) ===
-Chạy: python app.py
+=== GUI MODE (Recommended) ===
+Run: python app.py
 
-1. Nhập tên process ưu tiên (VD: vlc.exe, spotify.exe)
-2. Cấu hình mức âm lượng duck (0.0-1.0)
-3. Bấm "Start Ducking"
-4. Minimize to tray để chạy nền
+1. Enter priority process name (e.g., vlc.exe, spotify.exe)
+2. Configure duck volume level (0.0-1.0)
+3. Click "Start Ducking"
+4. Minimize to system tray for background operation
 
 === CLI MODE ===
-Chạy: python app.py --priority "vlc.exe"
+Run: python app.py --priority "vlc.exe"
 
-Ví dụ chi tiết:
+Detailed examples:
 - python app.py --priority "vlc.exe" --duck-to 0.2
 - python app.py --priority "spotify.exe" --other "chrome.exe" "discord.exe"
 
-🔧 BUILD EXE:
-Chạy: python build_exe.py
-Tạo ra file EXE độc lập trong thư mục dist/
+🔧 BUILD EXECUTABLE:
+Run: python build_exe.py
+Creates standalone EXE files in dist/ folder
 
-📁 CẤU TRÚC FILES:
+📁 FILE STRUCTURE:
 
-main.py           - File gốc (legacy CLI)
-app.py            - Launcher chính (GUI + CLI)
+main.py           - Original file (legacy CLI)
+app.py            - Main launcher (GUI + CLI)
 src/
-  ├─ audio_engine.py - Logic xử lý audio ducking  
-  └─ gui.py         - Giao diện PyQt6
-build_exe.py      - Script build EXE
-demo.py           - Test và demo
-quick_setup.bat   - Cài đặt nhanh
+  ├─ audio_engine.py - Audio ducking logic  
+  ├─ gui.py         - PyQt6 interface
+  └─ process_*.py   - Process management
+build_exe.py      - EXE build script
+assets/
+  ├─ logo.ico       - Application icon
+  └─ logo.svg       - Vector logo
+quick_setup.bat   - Quick installation
 
 🎮 USE CASES:
 
-Gaming:   Giảm nhạc khi game có âm thanh
-Call:     Tắt nhạc nền khi đang họp
-Media:    Giảm notification khi xem phim
+Gaming:     Duck music when game plays audio
+Calls:      Mute background audio during meetings
+Media:      Lower notifications while watching movies
+Streaming:  Manage multiple audio sources
 
 💡 TIPS:
 
-- Chạy as Administrator để có quyền truy cập đầy đủ
-- Tên process phải có đuôi .exe
-- Có thể target nhiều process cụ thể
-- Sử dụng system tray để chạy nền
-- Cấu hình được lưu tự động
+- Run as Administrator for full audio session access
+- Process names must include .exe extension
+- You can target multiple specific processes
+- Use system tray for background operation
+- Configuration is automatically saved
+- Check process names in Task Manager if unsure
 
 🐛 TROUBLESHOOTING:
 
-Lỗi import pycaw:     pip install pycaw comtypes
-Lỗi import PyQt6:     pip install PyQt6  
-Không detect audio:   Chạy as Administrator
-Build EXE lỗi:        pip install pyinstaller
+pycaw import error:     pip install pycaw comtypes
+PyQt6 import error:     pip install PyQt6  
+Audio not detected:     Run as Administrator
+Build EXE error:        pip install pyinstaller
+Logo not showing:       Check assets/logo.ico exists
+Permission denied:      Close running instances before rebuild
 
 📞 SUPPORT:
 
-Check README.md để biết thêm chi tiết
-Hoặc chạy demo.py để test hệ thống
+Check README.md for detailed information
+Run the GUI for an interactive experience
+All settings are saved automatically
