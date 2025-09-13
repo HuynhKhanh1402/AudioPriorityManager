@@ -25,8 +25,8 @@ A Windows application that automatically manages audio volume levels by "ducking
 
 1. **Clone the repository**:
    ```bash
-   git clone <repository-url>
-   cd AudioPriority
+   git clone https://github.com/HuynhKhanh1402/AudioPriorityManager.git
+   cd AudioPriorityManager
    ```
 
 2. **Run setup**:
