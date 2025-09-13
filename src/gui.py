@@ -13,6 +13,7 @@ from PyQt6.QtCore import QTimer, pyqtSignal, QThread, Qt, QSize
 from PyQt6.QtGui import QIcon, QPixmap, QFont, QAction, QPainter, QColor, QBrush
 
 from .audio_engine import AudioDuckingEngine, AudioDuckingConfig
+from . import __version__
 
 class ModernFrame(QFrame):
     """Modern styled frame widget"""
@@ -58,7 +59,8 @@ class AudioPriorityGUI(QMainWindow):
         self.engine: Optional[AudioDuckingEngine] = None
         self.config_file = "audio_priority_config.json"
         
-        self.setWindowTitle("Audio Priority Manager")
+        # Include version in the window title
+        self.setWindowTitle(f"Audio Priority Manager v{__version__}")
         self.setMinimumSize(800, 600)
         self.setStyleSheet(self._get_dark_theme())
         

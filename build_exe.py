@@ -14,13 +14,21 @@ def clean_build():
     build_dirs = ['build', 'dist', '__pycache__']
     for dir_name in build_dirs:
         if os.path.exists(dir_name):
-            shutil.rmtree(dir_name)
-            print(f"Cleaned {dir_name}/")
+            try:
+                shutil.rmtree(dir_name)
+                print(f"Cleaned {dir_name}/")
+            except PermissionError as e:
+                print(f"PermissionError: Could not delete {dir_name}. Ensure no files are in use.")
+                print(e)
     
     # Clean .spec files
     for spec_file in Path('.').glob('*.spec'):
-        spec_file.unlink()
-        print(f"Removed {spec_file}")
+        try:
+            spec_file.unlink()
+            print(f"Removed {spec_file}")
+        except PermissionError as e:
+            print(f"PermissionError: Could not delete {spec_file}. Ensure no files are in use.")
+            print(e)
 
 def get_icon_path():
     """Get the path to the existing logo icon"""
@@ -61,30 +69,43 @@ def create_icon():
         print("Pillow not available, skipping icon creation")
         return None
 
+def get_version():
+    """Fetch the version from src/__init__.py"""
+    version_file = Path('src/__init__.py')
+    if version_file.exists():
+        with open(version_file, 'r') as f:
+            for line in f:
+                if line.startswith('__version__'):
+                    return line.split('=')[1].strip().strip('"')
+    return "unknown"
+
 def build_gui_version():
     """Build GUI version"""
     print("Building GUI version...")
-    
+
+    # Fetch version
+    version = get_version()
+
     # Try to use existing logo first, fallback to creating one
     icon_path = get_icon_path()
     if not icon_path:
         icon_path = create_icon()
-    
+
     cmd = [
         'pyinstaller',
         '--onefile',                    # Single executable
         '--windowed',                   # No console window
-        '--name', 'AudioPriorityGUI',   # Output name
+        f'--name=AudioPriorityGUI_v{version}',  # Output name with version
         '--distpath', 'dist',           # Output directory
         '--workpath', 'build',          # Build directory
         '--clean',                      # Clean cache
         '--add-data', 'src;src',        # Include src directory
         '--add-data', 'assets;assets',  # Include assets directory for runtime logo access
     ]
-    
+
     if icon_path:
         cmd.extend(['--icon', icon_path])
-    
+
     # Hidden imports for PyQt6
     cmd.extend([
         '--hidden-import', 'PyQt6.QtCore',
@@ -93,9 +114,9 @@ def build_gui_version():
         '--hidden-import', 'pycaw.pycaw',
         '--hidden-import', 'comtypes'
     ])
-    
+
     cmd.append('app.py')
-    
+
     try:
         subprocess.run(cmd, check=True)
         print("✓ GUI version built successfully!")
@@ -107,12 +128,15 @@ def build_gui_version():
 def build_cli_version():
     """Build CLI version"""
     print("Building CLI version...")
-    
+
+    # Fetch version
+    version = get_version()
+
     cmd = [
         'pyinstaller',
         '--onefile',                    # Single executable
         '--console',                    # Keep console window
-        '--name', 'AudioPriorityCLI',   # Output name
+        f'--name=AudioPriorityCLI_v{version}',  # Output name with version
         '--distpath', 'dist',           # Output directory
         '--workpath', 'build',          # Build directory
         '--clean',                      # Clean cache
@@ -120,7 +144,7 @@ def build_cli_version():
         '--hidden-import', 'pycaw.pycaw',
         '--hidden-import', 'comtypes'
     ]
-    
+
     # Create a CLI-only entry point
     cli_entry = '''
 import sys
@@ -131,12 +155,12 @@ if __name__ == "__main__":
     from app import run_cli
     run_cli()
 '''
-    
+
     with open('cli_entry.py', 'w') as f:
         f.write(cli_entry)
-    
+
     cmd.append('cli_entry.py')
-    
+
     try:
         subprocess.run(cmd, check=True)
         print("✓ CLI version built successfully!")
@@ -275,7 +299,7 @@ def main():
         print(f"Output directory: dist/")
         
         if gui_success and cli_success:
-            print("\n🎉 Build completed successfully!")
+            print("\nBuild completed successfully!")
             print("\nDistribution files:")
             print("- AudioPriorityGUI.exe (GUI application)")  
             print("- AudioPriorityCLI.exe (Command-line tool)")
